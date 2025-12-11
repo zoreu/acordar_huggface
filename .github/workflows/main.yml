@@ -1,0 +1,22 @@
+name: Keep HuggingFace Space Awake
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"   # executa a cada 5 minutos
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping HuggingFace Space
+        run: |
+          URL="https://web1536-kapp.hf.space/zoreu/adblock_filter_ptbr/main/adblock_list.txt"
+          echo "Pingando $URL ..."
+          http_code=$(curl -s -o /dev/null -w "%{http_code}" "$URL")
+
+          if [ "$http_code" -eq 200 ] || [ "$http_code" -eq 302 ] || [ "$http_code" -eq 307 ]; then
+            echo "Space está online! Código HTTP: $http_code"
+          else
+            echo "O Space respondeu com código HTTP: $http_code"
+          fi
